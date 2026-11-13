@@ -1,13 +1,22 @@
 import { useState, useEffect } from 'react';
 import axiosInstance from '../axiosConfig';
-import TaskForm from '../components/TaskForm';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import TaskList from '../components/TaskList';
 import { useAuth } from '../context/AuthContext';
 
 const Tasks = () => {
   const { user } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
-  const [editingTask, setEditingTask] = useState(null);
+
+
+  useEffect(() => {
+    if (location.state?.message) {
+      navigate('/tasks', {replace: true, state: {} });
+    }
+  }, []);
+  
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -26,13 +35,11 @@ const Tasks = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <TaskForm
-        tasks={tasks}
-        setTasks={setTasks}
-        editingTask={editingTask}
-        setEditingTask={setEditingTask}
-      />
-      <TaskList tasks={tasks} setTasks={setTasks} setEditingTask={setEditingTask} />
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2x1 font-bold">My bookings</h1>
+        <Link to="tasks/new" className="bg-blue-600 text-white px-4 py-2 rounded">New booking request</Link>
+      </div>
+      <TaskList tasks={tasks} setTasks={setTasks} />
     </div>
   );
 };

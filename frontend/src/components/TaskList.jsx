@@ -1,8 +1,10 @@
 import { useAuth } from '../context/AuthContext';
 import axiosInstance from '../axiosConfig';
+import { useNavigate } from 'react-router-dom';
 
 const TaskList = ({ tasks, setTasks, setEditingTask }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleDelete = async (taskId) => {
     try {
@@ -17,7 +19,11 @@ const TaskList = ({ tasks, setTasks, setEditingTask }) => {
 
   return (
     <div>
-      {tasks.map((task) => (
+
+      {tasks.length === 0 ? (
+        <p className="text-gray-500">You have no bookings yet. Click "New booking requests" to make one.</p>
+      ) : (
+      tasks.map((task) => (
         <div key={task._id} className="bg-gray-100 p-4 mb-4 rounded shadow">
           <h2 className="font-bold">{task.service}</h2>
           <p>Guests: {task.guests}</p>
@@ -27,7 +33,7 @@ const TaskList = ({ tasks, setTasks, setEditingTask }) => {
           {task.status === 'Pending' && (
           <div className="mt-2">
             <button
-              onClick={() => setEditingTask(task)}
+              onClick={() => navigate('/tasks/new', { state: { editingTask: task } })}
               className="mr-2 bg-yellow-500 text-white px-4 py-2 rounded"
             >
               Edit
@@ -41,8 +47,9 @@ const TaskList = ({ tasks, setTasks, setEditingTask }) => {
           </div>
           )}
         </div>
-      ))}
-    </div>
+      ))
+    )}
+  </div>
   );
 };
 
