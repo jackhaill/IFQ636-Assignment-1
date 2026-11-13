@@ -17,7 +17,7 @@ const Navbar = () => {
         {user ? (
           <>
           {user.role ==='admin' ? (
-            <Link to="/admin/tasks" className="mr-4">Booking Requests</Link>
+            <Link to="/admin/tasks" className="mr-4">Admin Tasks</Link>
           ) : (
             <>
               <Link to="/tasks/new" className="mr-4">New bookings</Link>

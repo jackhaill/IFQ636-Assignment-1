@@ -5,8 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 const emptyForm = {service: '', guests: '', eventDate: '', notes: '' }
 
-const emptyForm = {service: '', guests: '', eventDate: '', notes: '' }
-
 const TaskForm = ({ tasks, setTasks, editingTask, setEditingTask }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
