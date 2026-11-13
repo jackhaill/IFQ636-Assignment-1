@@ -26,6 +26,7 @@ const TaskList = ({ tasks, setTasks, setEditingTask }) => {
       tasks.map((task) => (
         <div key={task._id} className="bg-gray-100 p-4 mb-4 rounded shadow">
           <h2 className="font-bold">{task.service}</h2>
+          <p className="text-sm font-semibold">Status: {task.status}</p>
           <p>Guests: {task.guests}</p>
           <p>Date: {task.eventDate ? new Date(task.eventDate).toLocaleDateString() : 'No date'}</p>
           {task.notes && <p className="text-sm text-gray-600">Notes: {task.notes}</p>}

@@ -29,7 +29,7 @@ const validateTask = ({ service, guests, eventDate }) => {
 // Return only logged-in user bookings
 const getTasks = async (req, res) => {
     try {
-        const tasks = (await Task.find({ userId: req.user.id })).toSorted({ eventDate: 1 });
+        const tasks = await Task.find({ userId: req.user.id }).sort({ eventDate: 1 });
         res.json(tasks);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -78,8 +78,8 @@ const updateTask = async (req, res) => {
         task.eventDate = eventDate;
         task.notes = notes; 
 
-        const updateTask = await task.save();
-        res.json(updatedTask);
+        const updated = await task.save();
+        res.json(updated);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -99,8 +99,8 @@ const deleteTask = async (req, res) => {
         }
 
         task.status = 'Cancelled';
-        const updateTask = await task.save();
-        res.json(updatedTask);
+        const updated = await task.save();
+        res.json(updated);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -110,7 +110,7 @@ const deleteTask = async (req, res) => {
 const getAllTasks = async (req, res) => {
     try {
         const tasks = await Task.find()
-            .populate('userId', 'name', 'email')
+            .populate('userId', 'name email')
             .sort({ createdAt: -1 });
         res.json(tasks);
     } catch (error) {

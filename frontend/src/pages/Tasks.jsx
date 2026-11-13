@@ -15,7 +15,7 @@ const Tasks = () => {
     if (location.state?.message) {
       navigate('/tasks', {replace: true, state: {} });
     }
-  }, []);
+  }, [location.state?.message, navigate]);
   
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const Tasks = () => {
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2x1 font-bold">My bookings</h1>
-        <Link to="tasks/new" className="bg-blue-600 text-white px-4 py-2 rounded">New booking request</Link>
+        <Link to="/tasks/new" className="bg-blue-600 text-white px-4 py-2 rounded">New booking request</Link>
       </div>
       <TaskList tasks={tasks} setTasks={setTasks} />
     </div>

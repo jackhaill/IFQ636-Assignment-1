@@ -31,20 +31,16 @@ const TaskForm = ({ tasks, setTasks, editingTask, setEditingTask }) => {
     setSuccess('');
     try {
       if (editingTask) {
-        const response = await axiosInstance.put(`/api/tasks/${editingTask._id}`, formData, {
+        await axiosInstance.put(`/api/tasks/${editingTask._id}`, formData, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
-        setTasks(tasks.map((task) => (task._id === response.data._id ? response.data : task)));
-        setSuccess('Booking updated.');
       } else {
-        const response = await axiosInstance.post('/api/tasks', formData, {
+        await axiosInstance.post('/api/tasks', formData, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
-        setTasks([...tasks, response.data]);
-        setSuccess('Booking request submitted. Status: Pending.');
       }
-      setEditingTask(null);
-      setFormData(emptyForm);
+        setFormData(emptyForm)
+        navigate('/tasks', { state: { message: editingTask ? 'Booking updated.' : 'Booking request submitted. Status: Pending'}});
     } catch (error) {
       alert('Failed to save booking.');
     }
