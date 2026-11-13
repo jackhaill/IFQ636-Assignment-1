@@ -2,68 +2,95 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import axiosInstance from '../axiosConfig';
 
+const emptyForm = {service: '', guests: '', eventDate: '', notes: '' }
+
 const TaskForm = ({ tasks, setTasks, editingTask, setEditingTask }) => {
   const { user } = useAuth();
-  const [formData, setFormData] = useState({ title: '', description: '', deadline: '' });
+  const [formData, setFormData] = useState(emptyForm);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     if (editingTask) {
       setFormData({
-        title: editingTask.title,
-        description: editingTask.description,
-        deadline: editingTask.deadline,
+        service: editingTask.service,
+        guests: editingTask.guests,
+        eventDate: editingTask.eventDate ? editingTask.eventDate.slice(0, 10) : '',
+        notes: editingTask.notes,
       });
     } else {
-      setFormData({ title: '', description: '', deadline: '' });
+      setFormData(emptyForm);
     }
   }, [editingTask]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
     try {
       if (editingTask) {
         const response = await axiosInstance.put(`/api/tasks/${editingTask._id}`, formData, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setTasks(tasks.map((task) => (task._id === response.data._id ? response.data : task)));
+        setSuccess('Booking updated.');
       } else {
         const response = await axiosInstance.post('/api/tasks', formData, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setTasks([...tasks, response.data]);
+        setSuccess('Booking request submitted. Status: Pending.');
       }
       setEditingTask(null);
-      setFormData({ title: '', description: '', deadline: '' });
+      setFormData(emptyForm);
     } catch (error) {
-      alert('Failed to save task.');
+      alert('Failed to save booking.');
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded mb-6">
-      <h1 className="text-2xl font-bold mb-4">{editingTask ? 'Edit Task' : 'Add Task'}</h1>
+      <h1 className="text-2xl font-bold mb-4">{editingTask ? 'Edit booking request' : 'New booking request'}</h1>
+
+      {error && <p className="mb-4 p-2 bg-red-100 text-red-700 rounded">{error}</p>}
+      {success && <p className="mb-4 p-2 bg-green-100 teext-green-700 rounded">{success}</p>}
+
+      <label className="block text-sm mb-1">Catering service</label>
       <input
         type="text"
-        placeholder="Title"
-        value={formData.title}
-        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+        placeholder="Gourmet Buffet "
+        value={formData.service}
+        onChange={(e) => setFormData({ ...formData, service: e.target.value })}
         className="w-full mb-4 p-2 border rounded"
       />
+
+      <label className="block text-sm mb-1">Number of guests</label>
       <input
-        type="text"
-        placeholder="Description"
-        value={formData.description}
-        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+        type="number"
+        placeholder="e.g. 30"
+        value={formData.guests}
+        onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
         className="w-full mb-4 p-2 border rounded"
       />
+
+      <label className="block text-sm mb-1">Event date</label>
       <input
         type="date"
-        value={formData.deadline}
-        onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+        value={formData.eventDate}
+        onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
         className="w-full mb-4 p-2 border rounded"
       />
+
+      <label className="block text-sm mb-1">Notes (optional)</label>
+      <input
+        type="text"
+        value={formData.notes}
+        onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+        className="w-full mb-4 p-2 border rounded"
+      />
+
       <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
-        {editingTask ? 'Update Task' : 'Add Task'}
+        {editingTask ? 'Update Booking' : 'Submit Booking'}
       </button>
     </form>
   );

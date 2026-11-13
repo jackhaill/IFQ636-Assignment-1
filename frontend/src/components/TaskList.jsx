@@ -19,9 +19,12 @@ const TaskList = ({ tasks, setTasks, setEditingTask }) => {
     <div>
       {tasks.map((task) => (
         <div key={task._id} className="bg-gray-100 p-4 mb-4 rounded shadow">
-          <h2 className="font-bold">{task.title}</h2>
-          <p>{task.description}</p>
-          <p className="text-sm text-gray-500">Deadline: {new Date(task.deadline).toLocaleDateString()}</p>
+          <h2 className="font-bold">{task.service}</h2>
+          <p>Guests: {task.guests}</p>
+          <p>Date: {task.eventDate ? new Date(task.eventDate).toLocaleDateString() : 'No date'}</p>
+          {task.notes && <p className="text-sm text-gray-600">Notes: {task.notes}</p>}
+
+          {task.status === 'Pending' && (
           <div className="mt-2">
             <button
               onClick={() => setEditingTask(task)}
@@ -36,6 +39,7 @@ const TaskList = ({ tasks, setTasks, setEditingTask }) => {
               Delete
             </button>
           </div>
+          )}
         </div>
       ))}
     </div>
