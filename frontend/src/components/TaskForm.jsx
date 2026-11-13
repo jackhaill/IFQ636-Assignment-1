@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import axiosInstance from '../axiosConfig';
+import { useNavigate } from 'react-router-dom';
 
 const emptyForm = {service: '', guests: '', eventDate: '', notes: '' }
 
 const TaskForm = ({ tasks, setTasks, editingTask, setEditingTask }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState(emptyForm);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -53,7 +55,7 @@ const TaskForm = ({ tasks, setTasks, editingTask, setEditingTask }) => {
       <h1 className="text-2xl font-bold mb-4">{editingTask ? 'Edit booking request' : 'New booking request'}</h1>
 
       {error && <p className="mb-4 p-2 bg-red-100 text-red-700 rounded">{error}</p>}
-      {success && <p className="mb-4 p-2 bg-green-100 teext-green-700 rounded">{success}</p>}
+      {success && <p className="mb-4 p-2 bg-green-100 text-green-700 rounded">{success}</p>}
 
       <label className="block text-sm mb-1">Catering service</label>
       <input
@@ -90,8 +92,9 @@ const TaskForm = ({ tasks, setTasks, editingTask, setEditingTask }) => {
       />
 
       <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
-        {editingTask ? 'Update Booking' : 'Submit Booking'}
+        {editingTask ? 'Save Changes' : 'Submit Booking'}
       </button>
+      <button type="button" onClick={() => navigate ('/tasks')} className="w-full mt-2 bg-gray-300 p-2 rounded"> Back to my bookings</button>
     </form>
   );
 };
