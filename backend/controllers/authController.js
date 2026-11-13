@@ -61,7 +61,7 @@ const updateUserProfile = async (req, res) => {
         user.email = email || user.email;
 
         const updatedUser = await user.save();
-        res.json({ id: updatedUser.id, name: updatedUser.name, email: updatedUser.email, role: user.role, token: generateToken(updatedUser.id) });
+        res.json({ id: updatedUser.id, name: updatedUser.name, email: updatedUser.email, role: updatedUser.role, token: generateToken(updatedUser.id) });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
